@@ -30,20 +30,24 @@ runs:
   using: "composite"
   steps:
     - name: Create .ssh Directory
+      shell: bash
       run: mkdir -p ~/.ssh
 
     - name: Save Public Key
+      shell: bash
       if: "${{ inputs.public_key != '' }}"
       run: |
         echo "${{ inputs.public_key }}" > ~/.ssh/${{ inputs.name }}.pub
         chmod 600 ~/.ssh/${{ inputs.name }}
 
     - name: Save Private Key
+      shell: bash
       if: "${{ inputs.private_key != '' }}"
       run: |
         echo "${{ inputs.private_key }}" > ~/.ssh/${{ inputs.name }}
         chmod 600 ~/.ssh/${{ inputs.name }}
 
     - name: Setup known_hosts File
+      shell: bash
       if: "${{ inputs.host != '' }}"
       run: ssh-keyscan -p ${{ inputs.port }} ${{ inputs.host }} >> ~/.ssh/known_hosts
