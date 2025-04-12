@@ -8,7 +8,7 @@ A GitHub Action to configure SSH keys and host fingerprints.
 
 ```yml
 - name: Setup SSH
-  uses: SolarLabyrinth/Action-Setup-SSH@v1
+  uses: solarlabyrinth/action-setup-ssh@v1
   with:
     name: id_ed25519
     public_key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
