@@ -7,7 +7,7 @@ A GitHub Action to configure SSH keys and host fingerprints.
 ## Usage
 
 ```yml
-- name: Setup Godot
+- name: Setup SSH
   uses: SolarLabyrinth/Action-Setup-SSH@v1
   with:
     name: id_ed25519
