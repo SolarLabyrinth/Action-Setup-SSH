@@ -1,0 +1,50 @@
+name: "Action Setup SSH"
+
+description: "A GitHub Action to configure SSH keys and host fingerprints"
+
+inputs:
+  name:
+    description: "The name of the SSH identity such as: id_ed25519."
+    type: string
+    required: false
+  public_key:
+    description: "The Public Key for your runner's ssh identity."
+    type: string
+    required: false
+  private_key:
+    description: "The Private Key for your runner's ssh identity."
+    type: string
+    required: false
+  host:
+    description: "The host to scan and add fingerprints for in known_hosts."
+    type: string
+    required: false
+  port:
+    description: "The port on the host to scan."
+    type: string
+    default: 22
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create .ssh Directory
+      run: mkdir -p ~/.ssh
+
+    - name: Save Public Key
+      run: |
+        echo "${{ secrets.DEPLOY_PUBLIC_KEY }}" > ~/.ssh/${{ input.name }}.pub
+        chmod 600 ~/.ssh/${{ input.name }}
+
+    - name: Save Private Key
+      run: |
+        echo "${{ secrets.DEPLOY_PRIVATE_KEY }}" > ~/.ssh/${{ input.name }}
+        chmod 600 ~/.ssh/${{ input.name }}
+
+    - name: Setup known_hosts File
+      run: ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -p ${{ env.port }} ${{ env.host }} >> ~/.ssh/known_hosts
