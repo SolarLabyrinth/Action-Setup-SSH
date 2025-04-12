@@ -6,6 +6,7 @@ inputs:
   name:
     description: "The name of the SSH identity such as: id_ed25519."
     type: string
+    default: id_ed25519
     required: false
   public_key:
     description: "The Public Key for your runner's ssh identity."
@@ -32,19 +33,17 @@ runs:
       run: mkdir -p ~/.ssh
 
     - name: Save Public Key
+      if: "${{ inputs.public_key != '' }}"
       run: |
-        echo "${{ secrets.DEPLOY_PUBLIC_KEY }}" > ~/.ssh/${{ input.name }}.pub
-        chmod 600 ~/.ssh/${{ input.name }}
+        echo "${{ inputs.public_key }}" > ~/.ssh/${{ inputs.name }}.pub
+        chmod 600 ~/.ssh/${{ inputs.name }}
 
     - name: Save Private Key
+      if: "${{ inputs.private_key != '' }}"
       run: |
-        echo "${{ secrets.DEPLOY_PRIVATE_KEY }}" > ~/.ssh/${{ input.name }}
-        chmod 600 ~/.ssh/${{ input.name }}
+        echo "${{ inputs.private_key }}" > ~/.ssh/${{ inputs.name }}
+        chmod 600 ~/.ssh/${{ inputs.name }}
 
     - name: Setup known_hosts File
-      run: ssh-keyscan -p ${{ secrets.DEPLOY_PORT }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-
-    - name: Configure SSH
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -p ${{ env.port }} ${{ env.host }} >> ~/.ssh/known_hosts
+      if: "${{ inputs.host != '' }}"
+      run: ssh-keyscan -p ${{ inputs.port }} ${{ inputs.host }} >> ~/.ssh/known_hosts
