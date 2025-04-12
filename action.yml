@@ -38,7 +38,7 @@ runs:
       if: "${{ inputs.public_key != '' }}"
       run: |
         echo "${{ inputs.public_key }}" > ~/.ssh/${{ inputs.name }}.pub
-        chmod 600 ~/.ssh/${{ inputs.name }}
+        chmod 600 ~/.ssh/${{ inputs.name }}.pub
 
     - name: Save Private Key
       shell: bash
